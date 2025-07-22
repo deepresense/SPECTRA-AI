@@ -1,0 +1,28 @@
+# Python  
+__pycache__/  
+*.py[cod]  
+*.so  
+.Python  
+venv/  
+env/  
+
+# QGIS  
+*.qgis-version  
+*.qgs~  
+
+# AI/Data  
+*.h5  
+*.pt  
+*.pth  
+*.onnx  
+/data/  
+/output/  
+
+# IDE  
+.idea/  
+.vscode/  
+*.swp  
+
+# OS  
+.DS_Store  
+Thumbs.db  
