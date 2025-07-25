@@ -26,7 +26,8 @@ import os
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
-
+from PyQt5.QtWidgets import QFileDialog
+from qgis.core import QgsProject
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'spectra_plugin_dialog_base.ui'))
@@ -36,9 +37,60 @@ class SpectraPluginDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(SpectraPluginDialog, self).__init__(parent)
-        # Set up the user interface from Designer through FORM_CLASS.
-        # After self.setupUi() you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
+        # # Set up the user interface from Designer through FORM_CLASS.
+        # # After self.setupUi() you can access any designer object by doing
+        # # self.<objectname>, and you can use autoconnect slots - see
+        # # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+        # # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        
+
+    def on_toolButton_clicked(self):
+        # Safely disconnect (if connected)
+        try:
+            self.toolButton.clicked.disconnect()  # Disconnect ALL slots
+        except TypeError:
+            pass  # Ignore if no connections exist
+        
+        try:
+            file_path, _ = QFileDialog.getOpenFileName(
+                self,
+                "Select File",
+                "",
+                "Images (*.png *.jpg *.tif *.tiff);;All Files (*)"
+            )
+            
+            if not file_path:  # User canceled
+                return
+            
+            print("Selected file:", file_path)
+            # Process file here
+            
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            # QMessageBox.critical(self, "Error", str(e))
+        finally:
+            # Reconnect (only if needed)
+            if self.toolButton.receivers(self.toolButton.clicked) == 0:
+                self.toolButton.clicked.connect(self.on_toolButton_clicked)
+
+    
+    
+
+    def update_layer_combo(self, combo_box):
+        """
+        Updates a QComboBox with available layers in QGIS.
+        - If layers exist: Lists them in the combo box.
+        - If no layers: Leaves it blank.
+        """
+        combo_box.clear()  # Clear existing items
+        
+        # Get all layers in QGIS project
+        layers = QgsProject.instance().mapLayers().values()
+        
+        if not layers:  # No layers found
+            return print("Kampret")
+        
+        # Add layer names to the combo box
+        for layer in layers:
+            combo_box.addItem(layer.name(), layer)  # Store layer object as userData

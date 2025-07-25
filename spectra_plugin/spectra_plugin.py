@@ -43,6 +43,7 @@ class SpectraPlugin:
             application at run time.
         :type iface: QgsInterface
         """
+
         # Save reference to the QGIS interface
         self.iface = iface
         # initialize plugin directory
@@ -62,6 +63,8 @@ class SpectraPlugin:
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&SPECTRA')
+
+
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
@@ -181,7 +184,7 @@ class SpectraPlugin:
 
 
     def run(self):
-        """Run method that performs all the real work"""
+        # """Run method that performs all the real work"""
 
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
@@ -198,3 +201,5 @@ class SpectraPlugin:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             pass
+
+    
