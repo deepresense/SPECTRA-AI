@@ -1,0 +1,8 @@
+**AI Remote Sensing Tasks:**
+
+- **Classifying:** Land use, vegetation types, soil conditions
+- **Detecting:** Objects (ships, aircraft, buildings), anomalies, changes
+- **Segmenting:** Pixel-level mapping of features
+- **Predicting:** Crop yields, weather impacts, urban growth
+- **Monitoring:** Environmental changes, disaster progression
+- **Estimating:** Biomass, population density, pollution levels

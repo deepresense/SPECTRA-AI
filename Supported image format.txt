@@ -1,0 +1,36 @@
+# Raster data
+
+GeoTIFF (.tif/.tiff) : Industry standard raster format with embedded geospatial metadata and coordinate reference system information
+
+JPEG2000 (.jp2) : Advanced compression format supporting both lossless and lossy compression with built-in geospatial capabilities
+
+PNG (.png) : Lossless compression format with transparency support, ideal for classification results and discrete data visualization
+
+JPEG (.jpg) : Widely compatible compressed format suitable for visual inspection and quick result sharing
+
+BMP (.bmp) : Uncompressed bitmap format with simple structure, resulting in large file sizes but maximum compatibility
+
+TIFF (.tiff) : Flexible raster format without geospatial tags, supporting multiple layers and high-quality storage
+
+NetCDF (.nc) : Scientific data format designed for multidimensional arrays and time-series remote sensing data
+
+HDF5 (.h5) : High-performance hierarchical data format optimized for large datasets and complex analytics storage
+
+PDF (.pdf) : Portable document format preserving layout and quality, ideal for report generation and result documentation
+
+
+# Vector data:
+
+**Most Common Vector Formats:**
+
+1. **Shapefile (.shp)** : ESRI's widely supported format for points, lines, polygons with attribute data
+
+2. **GeoJSON (.geojson)** : Lightweight, web-friendly JSON-based format for geospatial features
+
+3. **KML/KMZ (.kml/.kmz)** : Google Earth format for geographic visualization and sharing
+
+4. **GPKG (.gpkg)** : Modern SQLite-based format supporting both raster and vector data
+
+5. **DXF (.dxf)** : AutoCAD format for CAD and GIS data exchange
+
+**Most Professional:** Shapefile and GeoPackage
