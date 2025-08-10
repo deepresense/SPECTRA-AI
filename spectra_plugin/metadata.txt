@@ -5,14 +5,15 @@
 [general]
 name=SPECTRA
 qgisMinimumVersion=3.16
-description=Smart Platform for Earth's Collected Imagery Analysis - AI-powered remote sensing analysis tool (object detection, classification, segmentation, change detection)
+description=Smart Platform for Earth's Collected Imagery Analysis
 version=1.0
-author=Deepresense
+author=Faruq Fauzan (Deepresense)
 email=deepresense@gmail.com
 
 about=A cutting-edge plugin to run object detection, classification, segmentation, and change detection directly in QGIS—no coding needed. Designed for researchers, planners, and environmental analysts, SPECTRA integrates trained AI models (like TensorFlow/PyTorch) to turn satellite/drone imagery into actionable geospatial insights.
 
 tracker=https://github.com/deepresense/SPECTRA-AI/issues
+
 repository=https://github.com/deepresense/SPECTRA-AI
 # End of mandatory metadata
 
@@ -27,7 +28,7 @@ tags=remote sensing, AI, object detection, segmentation, QGIS, deep learning, sa
 
 homepage=https://github.com/deepresense/SPECTRA-AI
 category=Raster
-icon=icon.jpg
+icon=spectra_logo.png
 # experimental flag
 experimental=True
 

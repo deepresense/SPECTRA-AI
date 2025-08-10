@@ -163,7 +163,7 @@ class SpectraPlugin:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/spectra_plugin/icon.png'
+        icon_path = os.path.join(os.path.dirname(__file__), 'spectra_logo.png')
         self.add_action(
             icon_path,
             text=self.tr(u'SPECTRA AI'),

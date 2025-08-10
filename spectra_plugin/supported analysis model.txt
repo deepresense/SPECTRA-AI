@@ -1,0 +1,42 @@
+Here’s a short list of the most common **classification** and **detection** subtasks in **remote sensing analysis**:
+
+### 🔹 Classification Use Cases:
+
+1. **Land Use/Land Cover (LULC)** mapping
+2. **Crop type classification**
+3. **Forest type classification**
+4. **Soil type classification**
+5. **Water body extraction**
+6. **Urban vs rural area classification**
+7. **Burnt area classification**
+8. **Wetland classification**
+9. **Snow/ice cover mapping**
+10. **Vegetation health classification (e.g., NDVI-based)**
+
+### 🔹 Detection Use Cases:
+
+1. **Building detection**
+2. **Road detection**
+3. **Vehicle detection**
+4. **Ship/boat detection**
+5. **Tree or forest stand detection**
+6. **Change detection (e.g., deforestation, urban expansion)**
+7. **Flooded area detection**
+8. **Fire or smoke detection**
+9. **Illegal mining or construction detection**
+10. **Oil spill detection**
+
+Let me know if you want them grouped by industry or data type!
+
+first analysis choose for earlier version
+
+- Classification:
+1. LULC
+2. Crop type classification
+
+- Detection
+1. Building detection
+2. Trees
+
+
+
