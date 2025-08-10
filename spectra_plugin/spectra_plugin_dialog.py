@@ -24,16 +24,21 @@
 
 import os
 
-from qgis.PyQt import uic
-from qgis.PyQt import QtWidgets
-from PyQt5.QtWidgets import QFileDialog
-from qgis.core import QgsProject
+from qgis.PyQt import uic, QtWidgets
+from PyQt5.QtWidgets import  QFrame, QLabel, QVBoxLayout, QSizePolicy
+from qgis.core import QgsProject, QgsMapLayer
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt, QRect, QEvent
+from .spectra_widget_script import AOIMenu, InputImageMenu, ModelMenuGroup, TabLogWidget, ExportMenuGroup, CustomGraphicsView
+
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'spectra_plugin_dialog_base.ui'))
 
 
 class SpectraPluginDialog(QtWidgets.QDialog, FORM_CLASS):
+    
+# ||||||||||||||||||||||||||||||||||||||||||||||| INITIALIZATION |||||||||||||||||||||||||||||||||||||||||||||||
     def __init__(self, parent=None):
         """Constructor."""
         super(SpectraPluginDialog, self).__init__(parent)
@@ -43,54 +48,164 @@ class SpectraPluginDialog(QtWidgets.QDialog, FORM_CLASS):
         # # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
-        
 
-    def on_toolButton_clicked(self):
-        # Safely disconnect (if connected)
-        try:
-            self.toolButton.clicked.disconnect()  # Disconnect ALL slots
-        except TypeError:
-            pass  # Ignore if no connections exist
-        
-        try:
-            file_path, _ = QFileDialog.getOpenFileName(
-                self,
-                "Select File",
-                "",
-                "Images (*.png *.jpg *.tif *.tiff);;All Files (*)"
-            )
-            
-            if not file_path:  # User canceled
-                return
-            
-            print("Selected file:", file_path)
-            # Process file here
-            
-        except Exception as e:
-            print(f"Error: {str(e)}")
-            # QMessageBox.critical(self, "Error", str(e))
-        finally:
-            # Reconnect (only if needed)
-            if self.toolButton.receivers(self.toolButton.clicked) == 0:
-                self.toolButton.clicked.connect(self.on_toolButton_clicked)
 
+
+        # First Tab
+        # ****************************************************************************************************
+        # InputMenuGroup
+        # ----------------------------------------------------------------------------------------------------
+        self.input_box = InputImageMenu(self.comboBox)  # Pass the button to handler
+        self.toolButton.clicked.connect(self.input_box.browse_raster_file)  # Connect signal
+        self.input_box.populate_raster_combo()  # Call setup method (if public)
+
+
+        # input AOI | input group============================================================================
+        self.aoi_box = AOIMenu(self.comboBox_2)  # Pass the button to handler
+        self.toolButton_2.clicked.connect(self.aoi_box.browse_aoi_shapefile)  # Connect signal
+        self.aoi_box.populate_aoi_combo()  # Call setup method (if public)
+        # input AOI | input group============================================================================
+
+        # ----------------------------------------------------------------------------------------------------
+
+
+        # ModelMenuGroup 
+        # ---------------------------------------------------------------------------------------------------
+        # Initialize the logic handler
+        self.model_mgr = ModelMenuGroup(
+        self.comboBox_3,
+        self.comboBox_7, 
+        self.comboBox_4, 
+        self.toolButton_3,
+        self.groupBox_4,
+        self.toolButton_5,
+        self.scrollArea,
+        )
     
+        # Optional: Connect to model changes
+        self.model_mgr.model_changed.connect(self.on_model_changed)
+        
+        # Styling parameter description label
+        self.label_10.setAlignment(Qt.AlignJustify)
+        self.label_10.setStyleSheet("font-weight: bold; padding: 5px;")
+        self.label_10.setFrameShape(QFrame.Box)
+
+        # Pop up information for question mark button in parameter menu group (?)
+        
+        self.pushButton_5.clicked.connect(ModelMenuGroup.show_text1)
+        self.pushButton_6.clicked.connect(ModelMenuGroup.show_text2)
+        self.pushButton_7.clicked.connect(ModelMenuGroup.show_text3)
+
+        # Pop up information for question mark button in parameter menu group (?)
+        self.pushButton_13.clicked.connect(ModelMenuGroup.show_text5)
+        # Pop up information for question mark button in parameter menu group (?)
+        self.pushButton_11.clicked.connect(ModelMenuGroup.show_text4)
+
+        # Initial value for image resolution field
+        index = self.comboBox_9.findText("256")
+        if index != -1:
+            self.comboBox_9.setCurrentIndex(index)
+
+        # self.widget_4.layout().setSizeConstraint(QVBoxLayout.SetMinimumSize)
+        # self.groupBox_2.layout().setSizeConstraint(QVBoxLayout.SetMinimumSize)
+
+        # Toggle parameter
+        self.toolButton_5.toggled.connect(self.model_mgr.setup_menu_toggle)
+
+        # ----------------------------------------------------------------------------------------------------
+
+
+
+        # ExportMenuGroup 
+        # ---------------------------------------------------------------------------------------------------
+        # Visibility
+        self.exportmenu = ExportMenuGroup(self.lineEdit, self.comboBox_5)
+        # Functionality
+        # Connect the export button (change to your actual widget names)
+        self.toolButton_4.clicked.connect(self.exportmenu.select_export_path)
+        # Pop up information for question mark button in parameter menu group (?)
+        self.pushButton_14.clicked.connect(ModelMenuGroup.show_text6)
+        # ---------------------------------------------------------------------------------------------------
+
+        # ****************************************************************************************************
+
+
+
+        # Second Tab
+        # ****************************************************************************************************
+        # Connecting button to slot
+        # ===================================================================================================
+        self.Tab2 = TabLogWidget(self.plainTextEdit, self.tabWidget)
+        self.pushButton_4.clicked.connect(self.Tab2.change_tab)
+        self.pushButton_9.clicked.connect(self.Tab2.clear_log)
+        self.pushButton_10.clicked.connect(self.Tab2.copy_log)
+        self.pushButton_8.clicked.connect(self.Tab2.export_log)
+        # ===================================================================================================
+        # ****************************************************************************************************
     
 
-    def update_layer_combo(self, combo_box):
-        """
-        Updates a QComboBox with available layers in QGIS.
-        - If layers exist: Lists them in the combo box.
-        - If no layers: Leaves it blank.
-        """
-        combo_box.clear()  # Clear existing items
+
+
+        # Graphics View (init)
+        # ****************************************************************************************************
+        # Setup navigation preview (must be called after UI is set up)
+        self.graphics_view_nav = CustomGraphicsView(self.graphicsView)  
+        # self.graphics_view_nav.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.graphics_view_nav.setGeometry(QRect(self.graphicsView.pos().x(),
+                                   self.graphicsView.pos().y(),
+                                   self.graphicsView.width(),
+                                   self.graphicsView.height()))
         
-        # Get all layers in QGIS project
-        layers = QgsProject.instance().mapLayers().values()
+        self.graphics_view_nav.show()
+
+        self.graphicsView.installEventFilter(self)
+
+
+        # Tool button for graphics view
+        self.toolButton_8.clicked.connect(self.graphics_view_nav.set_pan_mode) # for pan tool button
+        self.toolButton_6.clicked.connect(self.graphics_view_nav.set_zoom_in_mode) # for zoom in tool button
+        self.toolButton_7.clicked.connect(self.graphics_view_nav.set_zoom_out_mode) # for zoom out tool button
+        self.toolButton_9.clicked.connect(self.graphics_view_nav.zoom_full_extent) # for zoom full extent button
         
-        if not layers:  # No layers found
-            return print("Kampret")
-        
-        # Add layer names to the combo box
-        for layer in layers:
-            combo_box.addItem(layer.name(), layer)  # Store layer object as userData
+        # Styling tool bar widget
+        self.widget_11.setStyleSheet("#widget_11 { border: 1px solid white; background-color: white; }")
+
+# ||||||||||||||||||||||||||||||||||||||||||||||| INITIALIZATION |||||||||||||||||||||||||||||||||||||||||||||||
+
+
+
+
+# |||||||||||||||||||||||||||||||||||||||||||||||||| METHOD ||||||||||||||||||||||||||||||||||||||||||||||||||||
+    # Model menu group (method)
+    # ****************************************************************************************************
+    # Example slot
+    def on_model_changed(self, model_path):
+        print(f"Model changed to: {model_path}")
+    # ****************************************************************************************************
+
+
+
+    # Graphics View (method)
+    # ****************************************************************************************************
+    def eventFilter(self, obj, event):
+        if obj is self.graphicsView and event.type() == QEvent.Resize:
+            new_rect = self.graphicsView.geometry()  # Gets x,y,width,height
+            self.update_rectangle(new_rect)
+        return super().eventFilter(obj, event)
+
+    def update_rectangle(self, rect):
+
+        self.graphics_view_nav.resize(rect.width(), rect.height())
+        print(f"Updated geometry: X={rect.x()}, Y={rect.y()}, {rect.width()}x{rect.height()}")
+
+        # for reset graphics view
+    def closeEvent(self, event):
+        self.graphics_view_nav.resetTransform()
+        self.graphics_view_nav.reset_view()
+        super().closeEvent(event)
+
+    # ****************************************************************************************************
+
+# |||||||||||||||||||||||||||||||||||||||||||||||||| METHOD ||||||||||||||||||||||||||||||||||||||||||||||||||||
+    
+
