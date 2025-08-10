@@ -1,0 +1,39 @@
+Here are the key **inference parameters** that affect hardware performance and should be adjustable based on user specs:  
+
+### **1. Batch Size**  
+   - Larger batches improve GPU utilization but require more VRAM.  
+   - *Adjustable based on available memory.*  
+
+### **2. Precision (FP32/FP16/INT8)**  
+   - Lower precision (FP16/INT8) speeds up inference but may reduce accuracy.  
+   - *Critical for GPU/TPU users.*  
+
+### **3. Tile/Patch Size** (for large images)  
+   - Smaller tiles reduce memory usage but increase overhead.  
+   - *Needed for CPU/low-RAM users.*  
+
+### **4. Number of Threads/Workers**  
+   - More threads speed up CPU inference (e.g., OpenMP/TensorFlow threads).  
+   - *Important for CPU-only users.*  
+
+### **5. Device Selection (CPU/GPU)**  
+   - Allow forcing CPU mode if GPU is weak or unavailable.  
+
+### **6. On-the-Fly Resizing**  
+   - Downsample input to reduce compute load (trade-off with accuracy).  
+
+### **7. Model Optimization Flags**  
+   - Enable **TensorRT, ONNX Runtime, or OpenVINO** for hardware-specific acceleration.  
+
+### **8. Memory-Saving Modes**  
+   - **Garbage collection** settings, gradient offloading (for edge devices).  
+
+### **Why This Matters?**  
+- **Low-end PCs/Edge Devices** → Smaller batches, FP16/INT8, CPU mode.  
+- **High-end GPUs** → Large batches, FP32, TensorRT optimization.  
+
+Adding these as **configurable options** ensures smooth performance across different hardware. 🚀
+
+These Parameters have been set up and optimized for most systems by default. You may adjust these parameters according to your hardware specifications to ensure smooth and stable model inference.
+
+

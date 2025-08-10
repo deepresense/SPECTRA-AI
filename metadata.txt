@@ -1,0 +1,48 @@
+# This file contains metadata for your plugin.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=SPECTRA
+qgisMinimumVersion=3.16
+description=Smart Platform for Earth's Collected Imagery Analysis
+version=1.0
+author=Faruq Fauzan (Deepresense)
+email=deepresense@gmail.com
+
+about=A cutting-edge plugin to run object detection, classification, segmentation, and change detection directly in QGIS—no coding needed. Designed for researchers, planners, and environmental analysts, SPECTRA integrates trained AI models (like TensorFlow/PyTorch) to turn satellite/drone imagery into actionable geospatial insights.
+
+tracker=https://github.com/deepresense/SPECTRA-AI/issues
+
+repository=https://github.com/deepresense/SPECTRA-AI
+# End of mandatory metadata
+
+# Recommended items:
+
+hasProcessingProvider=no
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=remote sensing, AI, object detection, segmentation, QGIS, deep learning, satellite imagery, change detection  
+
+homepage=https://github.com/deepresense/SPECTRA-AI
+category=Raster
+icon=spectra_logo.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
+
